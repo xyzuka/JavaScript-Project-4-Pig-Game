@@ -8,6 +8,8 @@ const score0El = document.getElementById('score--0');
 const score1El = document.getElementById('score--1');
 const current0El = document.getElementById('current--0');
 const current1El = document.getElementById('current--1');
+const name0El = document.getElementById('name--0');
+const name1El = document.getElementById('name--1');
 
 const diceEl = document.querySelector('.dice');
 const btnNew = document.querySelector('.btn--new');
@@ -23,16 +25,40 @@ const switchPlayer = function () {
         //classList.toggle will add a class if it is not there, and remove it if it is there - so during the switch, it effects both player elements
 }
 
-// Starting conditions
-score0El.textContent = 0;
-score1El.textContent = 0;
-diceEl.classList.add('hidden'); // adding the hidden class to hide the dice in the beginning of the game
+let score, currentScore, activePlayer, playing;
 
-const score = [0, 0];
-let currentScore = 0;
-let activePlayer = 0;
-let secondPlayer = 1;
-let playing = true;
+// Starting conditions in a reset function
+const init = function () {
+    
+    // const and let statements are deleted since they were defined before this
+    score = [0, 0];
+    currentScore = 0;
+    activePlayer = 0;
+    playing = true;
+    
+    // Reset scores to 0
+    score0El.textContent = 0;
+    score1El.textContent = 0;
+    current0El.textContent = 0;
+    current1El.textContent = 0;
+    
+    // Remove winner class black background
+    player0El.classList.remove('player--winner');
+    player1El.classList.remove('player--winner');
+    
+    // Adding active player background 
+    player0El.classList.add('player--active');
+    player1El.classList.remove('player--active');
+    
+    // Reset you win statement
+    name0El.textContent = "Player 1";
+    name1El.textContent = "Player 2";
+
+    // adding the hidden class to hide the dice in the beginning of the game
+    diceEl.classList.add('hidden'); 
+}
+
+init();
 
 // Rolling dice functionality
 btnRoll.addEventListener('click', function() {
@@ -65,7 +91,7 @@ btnHold.addEventListener('click', function () {
         score[activePlayer] += currentScore;
         document.getElementById(`score--${activePlayer}`).textContent = score[activePlayer]; // dynamically updates the score using template literals
         // 2. Is the score over 100? 
-        if (score[activePlayer] >= 20) {
+        if (score[activePlayer] >= 15) {
             // if true: Finish Game
             playing = false;
             document.querySelector(`.player--${activePlayer}`)
@@ -73,6 +99,8 @@ btnHold.addEventListener('click', function () {
             document.querySelector(`.player--${activePlayer}`)
             .classList.remove('player--active');
             diceEl.classList.add('hidden');
+            // Statement You Win! if player wins
+            document.getElementById(`name--${activePlayer}`).textContent = "You Win!";
         } else {
             // else: Switch player
             switchPlayer();
@@ -80,3 +108,6 @@ btnHold.addEventListener('click', function () {
     }   
 })
 
+
+// New game button
+btnNew.addEventListener('click', init);
