@@ -32,44 +32,51 @@ const score = [0, 0];
 let currentScore = 0;
 let activePlayer = 0;
 let secondPlayer = 1;
+let playing = true;
 
 // Rolling dice functionality
 btnRoll.addEventListener('click', function() {
-    // 1. Generating random dice roll
-    const dice = Math.trunc(Math.random() * 6) + 1;
+    if(playing) { //playing is already a boolean value so its true already 
+        // 1. Generating random dice roll
+        const dice = Math.trunc(Math.random() * 6) + 1;
 
-    // 2. Displaying dice roll
-    diceEl.classList.remove('hidden');
-    diceEl.src = `dice-${dice}.png`; // Displays the specific image of the dice number rolled with template literals
+        // 2. Displaying dice roll
+        diceEl.classList.remove('hidden');
+        diceEl.src = `dice-${dice}.png`; // Displays the specific image of the dice number rolled with template literals
 
-    // 3. Check if dice is 1: if true; switch to next player
-    if (dice !== 1) {
-        // Add dice to current score
-        currentScore += dice;
-        document.getElementById(
-        `current--${activePlayer}`
-        ).textContent = currentScore;
-    } else {
-        // Lose all score and switch to next player
-        switchPlayer();
+        // 3. Check if dice is 1: if true; switch to next player
+        if (dice !== 1) {
+            // Add dice to current score
+            currentScore += dice;
+            document.getElementById(
+            `current--${activePlayer}`
+            ).textContent = currentScore;
+        } else {
+            // Lose all score and switch to next player
+            switchPlayer();
+        }
     }
 })
 
 // Holding score functionality
 btnHold.addEventListener('click', function () {
-    // 1. Adding currentScore to active player's score
-    score[activePlayer] += currentScore;
-    document.getElementById(`score--${activePlayer}`).textContent = score[activePlayer]; // dynamically updates the score using template literals
-    // 2. Is the score over 100? 
-    if (score[activePlayer] >= 20) {
-        // if true: Finish Game
-        document.querySelector(`.player--${activePlayer}`)
-        .classList.add('player--winner');
-        document.querySelector(`.player--${activePlayer}`)
-        .classList.remove('player--active');
-    } else {
-        // else: Switch player
-        switchPlayer();
-    }
+    if (playing) { // Once the player finally hits 100, the boolean will be switched to false and therefore the roll and hold buttons will not work since they need the playing boolean to be false
+        // 1. Adding currentScore to active player's score
+        score[activePlayer] += currentScore;
+        document.getElementById(`score--${activePlayer}`).textContent = score[activePlayer]; // dynamically updates the score using template literals
+        // 2. Is the score over 100? 
+        if (score[activePlayer] >= 20) {
+            // if true: Finish Game
+            playing = false;
+            document.querySelector(`.player--${activePlayer}`)
+            .classList.add('player--winner');
+            document.querySelector(`.player--${activePlayer}`)
+            .classList.remove('player--active');
+            diceEl.classList.add('hidden');
+        } else {
+            // else: Switch player
+            switchPlayer();
+        }
+    }   
 })
 
