@@ -91,7 +91,7 @@ btnHold.addEventListener('click', function () {
         score[activePlayer] += currentScore;
         document.getElementById(`score--${activePlayer}`).textContent = score[activePlayer]; // dynamically updates the score using template literals
         // 2. Is the score over 100? 
-        if (score[activePlayer] >= 15) {
+        if (score[activePlayer] >= 100) {
             // if true: Finish Game
             playing = false;
             document.querySelector(`.player--${activePlayer}`)
